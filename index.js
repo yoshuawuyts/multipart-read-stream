@@ -1,8 +1,8 @@
+const eos = require('end-of-stream')
 const assert = require('assert')
 const Busboy = require('busboy')
 const stream = require('stream')
 const xtend = require('xtend')
-const pump = require('pump')
 
 module.exports = downloadMultipart
 
@@ -10,8 +10,8 @@ module.exports = downloadMultipart
 // (req, res, obj?, fn, fn) -> tstream
 function downloadMultipart (req, res, opts, handle, cb) {
   if (!cb) {
-    handle = opts
     cb = handle
+    handle = opts
     opts = {}
   }
   opts = xtend({ headers: req.headers }, opts)
@@ -33,7 +33,6 @@ function downloadMultipart (req, res, opts, handle, cb) {
 
   busboy.on('file', handle)
 
-  const pts = new stream.PassThrough()
-  pump(pts, busboy, cb)
-  return pts
+  eos(busboy, cb)
+  return busboy
 }

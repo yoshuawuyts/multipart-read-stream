@@ -17,10 +17,14 @@
   "license": "MIT",
   "dependencies": {
     "busboy": "^0.2.13",
-    "pump": "^1.0.1"
+    "end-of-stream": "^1.1.0",
+    "xtend": "^4.0.1"
   },
   "devDependencies": {
+    "concat-stream": "^1.5.2",
     "dependency-check": "^2.6.0",
+    "form-data": "^2.1.1",
+    "get-server-port": "^1.0.0",
     "istanbul": "^0.4.5",
     "standard": "^8.4.0",
     "tape": "^4.6.2"
