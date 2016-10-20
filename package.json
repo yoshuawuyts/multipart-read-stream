@@ -1,0 +1,28 @@
+{
+  "name": "multipart-read-stream",
+  "version": "1.0.0",
+  "description": "Read a multipart stream over HTTP",
+  "main": "index.js",
+  "scripts": {
+    "deps": "dependency-check . && dependency-check . --extra --no-dev",
+    "test": "standard && npm run deps && NODE_ENV=test node test",
+    "test:cov": "standard && npm run deps && NODE_ENV=test istanbul cover test.js"
+  },
+  "repository": "yoshuawuyts/multipart-read-stream",
+  "keywords": [
+    "http",
+    "multipart",
+    "stream"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "busboy": "^0.2.13",
+    "pump": "^1.0.1"
+  },
+  "devDependencies": {
+    "dependency-check": "^2.6.0",
+    "istanbul": "^0.4.5",
+    "standard": "^8.4.0",
+    "tape": "^4.6.2"
+  }
+}
