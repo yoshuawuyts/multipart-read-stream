@@ -23,7 +23,7 @@
   "devDependencies": {
     "concat-stream": "^1.5.2",
     "dependency-check": "^2.6.0",
-    "form-data": "^2.1.1",
+    "form-data": "^2.1.2",
     "get-server-port": "^1.0.0",
     "istanbul": "^0.4.5",
     "standard": "^8.4.0",
