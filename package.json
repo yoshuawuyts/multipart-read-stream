@@ -26,7 +26,7 @@
     "form-data": "^2.1.1",
     "get-server-port": "^1.0.0",
     "istanbul": "^0.4.5",
-    "standard": "^8.4.0",
+    "standard": "^8.6.0",
     "tape": "^4.6.2"
   }
 }
