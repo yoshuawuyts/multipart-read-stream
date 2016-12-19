@@ -21,7 +21,7 @@
     "xtend": "^4.0.1"
   },
   "devDependencies": {
-    "concat-stream": "^1.5.2",
+    "concat-stream": "^1.6.0",
     "dependency-check": "^2.6.0",
     "form-data": "^2.1.1",
     "get-server-port": "^1.0.0",
