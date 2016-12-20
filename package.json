@@ -16,8 +16,9 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "busboy": "^0.2.13",
+    "content": "^3.0.3",
     "end-of-stream": "^1.1.0",
+    "pez": "^2.1.4",
     "xtend": "^4.0.1"
   },
   "devDependencies": {
@@ -26,6 +27,7 @@
     "form-data": "^2.1.1",
     "get-server-port": "^1.0.0",
     "istanbul": "^0.4.5",
+    "pump": "^1.0.1",
     "standard": "^8.4.0",
     "tape": "^4.6.2"
   }
