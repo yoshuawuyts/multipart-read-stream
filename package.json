@@ -1,6 +1,6 @@
 {
   "name": "multipart-read-stream",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "description": "Read a multipart stream over HTTP",
   "main": "index.js",
   "scripts": {
