@@ -1,8 +1,8 @@
-const eos = require('end-of-stream')
-const assert = require('assert')
-const pez = require('pez')
-const content = require('content')
-const xtend = require('xtend')
+var eos = require('end-of-stream')
+var assert = require('assert')
+var pez = require('pez')
+var content = require('content')
+var xtend = require('xtend')
 
 module.exports = downloadMultipart
 

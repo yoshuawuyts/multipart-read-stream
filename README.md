@@ -6,11 +6,11 @@ Read a multipart stream over HTTP. Built on top of [pez][pez].
 
 ## Usage
 ```js
-const mp = require('multipart-read-stream')
-const http = require('http')
+var mp = require('multipart-read-stream')
+var http = require('http')
 
-http.createServer((req, res) => {
-  const rs = mp(req, res, fileHandler, (err) => {
+http.createServer(function (req, res) {
+  var rs = mp(req, res, fileHandler, function (err) {
     if (err) res.end('server error')
     res.end()
   })
@@ -35,24 +35,24 @@ Create a new multipart stream handler. Takes the following arguments:
 
 ### Events
 
-multipart-read-stream returns an instance (from `pez.Dispenser`) which 
+multipart-read-stream returns an instance (from `pez.Dispenser`) which
 emits a number of multipart specific events:
 
 #### readableStream.on('part', cb(stream))
 
-The `part` event drives the `fileHandler` callback for the main API. 
+The `part` event drives the `fileHandler` callback for the main API.
 The difference is it supplies a single parameter, the read stream of the
 file data of a multipart section.
 
 #### readableStream.on('field', cb(name, value))
 
-A field event is emitted for partitions containing key-value data 
+A field event is emitted for partitions containing key-value data
 (instead of file data).
 
 #### readableStream.on('preamble', cb(str))
 
 Multipart data *may* have a preamble section, which is typically
-ignored by parsers. However it's sometimes used as an area to 
+ignored by parsers. However it's sometimes used as an area to
 contain hints/meta information.
 
 #### readableStream.on('epilogue', cb(str))

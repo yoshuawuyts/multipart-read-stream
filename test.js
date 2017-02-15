@@ -1,21 +1,21 @@
-const getPort = require('get-server-port')
-const FormData = require('form-data')
-const concat = require('concat-stream')
-const http = require('http')
-const path = require('path')
-const pump = require('pump')
-const test = require('tape')
-const fs = require('fs')
+var getPort = require('get-server-port')
+var FormData = require('form-data')
+var concat = require('concat-stream')
+var http = require('http')
+var path = require('path')
+var pump = require('pump')
+var test = require('tape')
+var fs = require('fs')
 
-const multipart = require('./')
+var multipart = require('./')
 
-const filePath = path.join(__dirname, 'README.md')
+var filePath = path.join(__dirname, 'README.md')
 
 test('should assert input types', function (t) {
   t.plan(8)
 
-  const server = http.createServer((req, res) => {
-    const ws = multipart(req, res, handleFile, (err) => {
+  var server = http.createServer((req, res) => {
+    var ws = multipart(req, res, handleFile, (err) => {
       t.error(err, 'done cb: no err')
       res.end()
     })
@@ -26,16 +26,16 @@ test('should assert input types', function (t) {
       t.equal(field, 'upload')
       t.equal(encoding, '7bit')
       t.equal(mimetype, 'text/x-markdown')
-      const original = fs.readFileSync(filePath, 'utf8')
+      var original = fs.readFileSync(filePath, 'utf8')
       file.pipe(concat((buf) => t.equal(String(buf), original)))
     }
   })
   server.listen()
-  const port = getPort(server)
+  var port = getPort(server)
 
   // request
-  const form = new FormData()
-  const opts = {
+  var form = new FormData()
+  var opts = {
     protocol: 'http:',
     hostname: 'localhost',
     port: port,
@@ -44,8 +44,8 @@ test('should assert input types', function (t) {
     method: 'POST'
   }
 
-  const req = http.request(opts, () => server.close())
-  const rs = fs.createReadStream(filePath)
+  var req = http.request(opts, () => server.close())
+  var rs = fs.createReadStream(filePath)
   form.append('upload', rs)
   pump(form, req, (err) => t.error(err, 'client pump: no err'))
 })
