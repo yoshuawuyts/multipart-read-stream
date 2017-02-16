@@ -6,57 +6,54 @@ Read a multipart stream over HTTP. Built on top of [pez][pez].
 
 ## Usage
 ```js
-var mp = require('multipart-read-stream')
+var multipart = require('multipart-read-stream')
+var pump = require('pump')
 var http = require('http')
 
 http.createServer(function (req, res) {
-  var rs = mp(req, res, fileHandler, function (err) {
+  var multipartStream = multipart(req.headers, handler)
+
+  pump(req, multipartStream, function (err) {
     if (err) res.end('server error')
     res.end()
   })
-  req.pipe(rs)
 
-  function fileHandler (fieldname, file, filename) {
-    console.log(`reading file ${filename} from field ${fieldname}`)
-    file.pipe(process.stdout)
+  function handler (fieldname, file, filename) {
+    console.log('reading file ' + filename + ' from field ' + fieldname)
+    var fileStream = fs.createWriteStream(path.join('/tmp', filename))
+    pump(file, fileStream)
   }
-})
+}).listen(8080)
 ```
 
 ## API
-### readableStream = multipart(req, res, fileHandler, options?, done)
+### readableStream = multipart(headers, [options], fileHandler)
 Create a new multipart stream handler. Takes the following arguments:
 - __req:__ HTTP `request` type
 - __res:__ HTTP `response` type
+- __options:__ an object that is passed directly to [pez][pez]
 - __filehandler(fieldname, file, filename, encoding, mimetype):__ handle a
   file. Each `file` is a `readableStream`
-- __options:__ an object that is passed directly to [pez][pez]
-- __done:__ callback that is called on error or when all data has been parsed
 
 ### Events
-
 multipart-read-stream returns an instance (from `pez.Dispenser`) which
 emits a number of multipart specific events:
 
 #### readableStream.on('part', cb(stream))
-
 The `part` event drives the `fileHandler` callback for the main API.
 The difference is it supplies a single parameter, the read stream of the
 file data of a multipart section.
 
 #### readableStream.on('field', cb(name, value))
-
 A field event is emitted for partitions containing key-value data
 (instead of file data).
 
 #### readableStream.on('preamble', cb(str))
-
 Multipart data *may* have a preamble section, which is typically
 ignored by parsers. However it's sometimes used as an area to
 contain hints/meta information.
 
 #### readableStream.on('epilogue', cb(str))
-
 As with the preamble section, the epilogue section essentially
 has the same role (ignored, but can be used for meta data), except
 it will be parsed after the body rather than before.

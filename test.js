@@ -12,22 +12,31 @@ var multipart = require('./')
 var filePath = path.join(__dirname, 'README.md')
 
 test('should assert input types', function (t) {
-  t.plan(8)
+  t.plan(3)
+  t.throws(multipart.bind(null), /object/)
+  t.throws(multipart.bind(null, {}), /function/)
+  t.throws(multipart.bind(null, {}, 123, function () {}), /object/)
+})
 
-  var server = http.createServer((req, res) => {
-    var ws = multipart(req, res, handleFile, (err) => {
-      t.error(err, 'done cb: no err')
+test('should parse forms', function (t) {
+  t.plan(7)
+
+  var server = http.createServer(function (req, res) {
+    var multipartStream = multipart(req.headers, handler)
+    pump(req, multipartStream, function (err) {
+      t.ifError(err, 'no error')
       res.end()
     })
-    pump(req, ws, (err) => t.error(err, 'server pump: no err'))
 
-    function handleFile (field, file, filename, encoding, mimetype) {
+    function handler (field, file, filename, encoding, mimetype) {
       t.equal(filename, 'README.md')
       t.equal(field, 'upload')
       t.equal(encoding, '7bit')
       t.equal(mimetype, 'text/x-markdown')
       var original = fs.readFileSync(filePath, 'utf8')
-      file.pipe(concat((buf) => t.equal(String(buf), original)))
+      file.pipe(concat(function (buf) {
+        t.equal(String(buf), original)
+      }))
     }
   })
   server.listen()
@@ -44,8 +53,10 @@ test('should assert input types', function (t) {
     method: 'POST'
   }
 
-  var req = http.request(opts, () => server.close())
+  var req = http.request(opts, server.close.bind(server))
   var rs = fs.createReadStream(filePath)
   form.append('upload', rs)
-  pump(form, req, (err) => t.error(err, 'client pump: no err'))
+  pump(form, req, function (err) {
+    t.error(err, 'client pump: no err')
+  })
 })

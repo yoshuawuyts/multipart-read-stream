@@ -1,34 +1,31 @@
-var eos = require('end-of-stream')
-var assert = require('assert')
-var pez = require('pez')
 var content = require('content')
+var assert = require('assert')
 var xtend = require('xtend')
+var pez = require('pez')
 
 module.exports = downloadMultipart
 
-// download a multipart request
-// (req, res, obj?, fn, fn) -> tstream
-function downloadMultipart (req, opts, handle, cb) {
-  if (!cb) {
-    cb = handle
+// Download a multipart request
+// (obj, [obj], fn) -> transformStream
+function downloadMultipart (headers, opts, handle) {
+  if (!handle) {
     handle = opts
     opts = {}
   }
-  opts = xtend(content.type(req.headers['content-type']), opts)
 
-  assert.equal(typeof req, 'object', 'multipart-stream: req should be an object')
+  assert.equal(typeof headers, 'object', 'multipart-stream: headers should be an object')
   assert.equal(typeof opts, 'object', 'multipart-stream: opts should be an object')
   assert.equal(typeof handle, 'function', 'multipart-stream: handle should be a function')
-  assert.equal(typeof cb, 'function', 'multipart-stream: cb should be a function')
 
+  opts = xtend(content.type(headers['content-type']), opts)
   var dispenser = new pez.Dispenser(opts)
 
   dispenser.on('part', function (part) {
     var encoding = part.headers['content-transfer-encoding']
-    encoding = encoding ? encoding.toLowerCase() : '7bit'
+    encoding = (encoding) ? encoding.toLowerCase() : '7bit'
+
     handle(part.name, part, part.filename, encoding, part.headers['content-type'])
   })
 
-  eos(dispenser, cb)
   return dispenser
 }

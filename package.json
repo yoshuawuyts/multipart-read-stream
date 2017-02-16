@@ -17,7 +17,6 @@
   "license": "MIT",
   "dependencies": {
     "content": "^3.0.3",
-    "end-of-stream": "^1.1.0",
     "pez": "^2.1.4",
     "xtend": "^4.0.1"
   },
