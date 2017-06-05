@@ -29,8 +29,7 @@ http.createServer(function (req, res) {
 ## API
 ### readableStream = multipart(headers, [options], fileHandler)
 Create a new multipart stream handler. Takes the following arguments:
-- __req:__ HTTP `request` type
-- __res:__ HTTP `response` type
+- __headers:__ an object containing request headers (typically: `req.headers`)
 - __options:__ an object that is passed directly to [pez][pez]
 - __filehandler(fieldname, file, filename, encoding, mimetype):__ handle a
   file. Each `file` is a `readableStream`
